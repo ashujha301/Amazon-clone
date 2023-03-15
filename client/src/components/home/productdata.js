@@ -80,7 +80,7 @@ export const products = [
             cost: 1124,
             discount: '40%'
         },
-        description: '',
+        description: 'Best Hair dryer in the market',
         discount: 'From ₹499', 
         tagline: 'Kubra, Nova & more' 
     }
