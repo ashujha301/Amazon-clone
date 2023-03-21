@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const productsSchema = new mongoose.Schema({
     id:String,
     url:String,
-    detailsUrl:String,
+    detailUrl:String,
     title:Object,
     price:Object,
     description:String,
-    discout:String,
+    discount:String,
     tagline:String,
 });
 

@@ -38,7 +38,7 @@ const Cart = () => {
       {inddata && Object.keys(inddata).length && (
         <div className="cart_container">
           <div className="left_cart">
-            <img src={inddata.url} alt="cart_img" />
+            <img src={inddata.detailUrl} alt="cart_img" />
             <div className="cart_btn">
               <button className="cart_btn1">Add to Cart</button>
               <button className="cart_btn2">Buy Now</button>
