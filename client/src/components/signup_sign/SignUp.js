@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
 
 const SignUp = () => {
   const [udata, setUdata] = useState({
@@ -11,6 +13,7 @@ const SignUp = () => {
   });
 
   
+
 
   const updata = (e) => {
     const { name, value } = e.target;
@@ -26,6 +29,40 @@ const SignUp = () => {
 
   console.log(udata);
 
+  const senddata = async(e)=>{
+    e.preventDefault();
+    const {name,email,number,password,cpassword} = udata;
+
+    
+
+    const res = await fetch("register" , {
+      method: "POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        name,email,number,password,cpassword
+      })
+    });
+
+    const data = await res.json();
+    //console.log(data);
+
+    if(res.status === 422 || !data){
+      //alert("no data")
+      toast.warn('Invalid Details', {
+        position: "top-center",
+        theme: "colored",})
+    }else{
+      //alert("data added succesfully")
+      toast.success('Data Added Succedfully', {
+        position: "top-center",
+        theme: "colored",})
+      setUdata({...udata,name:"",email:"",number:"",password:"",cpassword:""})
+    }
+
+  }
+
   return (
     <section>
       <div className="sign_container">
@@ -33,7 +70,7 @@ const SignUp = () => {
           <img src="./blacklogoamazon.png" alt="amazonlogo" />
         </div>
         <div className="sign_form">
-          <form>
+          <form method="POST">
             <h1>Creat Account</h1>
             <div className="form_data">
               <label htmlFor="">Your Name</label>
@@ -86,7 +123,7 @@ const SignUp = () => {
                 id="cpassword"
               />
             </div>
-            <button className="signin_btn">Sign Up</button>
+            <button className="signin_btn" onClick={senddata}>Sign Up</button>
             <hr></hr>
             <div className="signin_info">
               <p>Already have an account?</p>
@@ -94,6 +131,7 @@ const SignUp = () => {
             </div>
           </form>
         </div>
+        <ToastContainer />
       </div>
     </section>
   );

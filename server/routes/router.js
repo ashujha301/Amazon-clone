@@ -59,6 +59,12 @@ router.post("/register", async (req, res) => {
         cpassword,
       });
 
+      //hash -> encrypt hujug ->> decrypt -> hash
+      // bcryptjs 
+
+      // password hashing process 
+      
+
       const storedata = await finalUser.save();
       console.log(storedata);
       res.status(201).json(storedata);
