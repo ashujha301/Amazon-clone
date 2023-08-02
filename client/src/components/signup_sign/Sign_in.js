@@ -50,7 +50,7 @@ const Sign_in = () => {
         theme: "colored",})
     }else{
       console.log("data valid");
-      toast.success('User Logged In', {
+      toast.success('User Logged In Succesfully', {
         position: "top-center",
         theme: "colored",})
       setData({...logdata,email:"",password:""});

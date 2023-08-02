@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcryptjs = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const secretkey = process.env.KEY;
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -45,7 +47,7 @@ const userSchema = new mongoose.Schema({
   carts: Array
 });
 
-//pre method for password hashing
+//pre method for password hashing---->
 userSchema.pre("save" , async function(next){
   if(this.isModified("password")){
     this.password = await bcryptjs.hash(this.password,12);
@@ -55,6 +57,21 @@ userSchema.pre("save" , async function(next){
   next();
  
 })
+
+//token generate process JWT------>
+
+userSchema.methods.generateAuthToken = async function(){
+  try{
+    let token = jwt.sign({_id:this._id },secretkey);
+    this.tokens = this.tokens.concat({token:token});
+    await this.save();
+
+    return token;
+  }catch(error){
+    console.log(error);
+  }
+}
+
 
 const USER = new mongoose.model("USER",userSchema);
 
