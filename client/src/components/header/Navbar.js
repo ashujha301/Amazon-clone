@@ -1,12 +1,20 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import "./navbar.css";
 import SearchIcon from '@mui/icons-material/Search';
 import Badge from '@mui/material/Badge';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Avatar from '@mui/material/Avatar';
 import { NavLink } from 'react-router-dom';
+import { LoginContext } from '../context/ContextProvider';
+
 
 const Navbar = () => {
+
+  const {account} = useContext(LoginContext);
+  console.log(account);
+  
+  const cartItemCount = account && account.carts ? account.carts.length : 0;
+
   return (
     <header>
       <nav>
@@ -26,7 +34,7 @@ const Navbar = () => {
             <NavLink to="/login">signin</NavLink>
           </div>
           <div className="cart_btn">
-            <Badge badgeContent={2} color="primary">
+            <Badge badgeContent={cartItemCount} color="primary">
               <ShoppingCartIcon id="icon" />
 
             </Badge>
@@ -39,4 +47,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default Navbar;

@@ -3,6 +3,7 @@ const router = new express.Router();
 const Products = require("../models/productsSchema");
 const USER = require("../models/userSchema");
 const bcryptjs = require("bcryptjs");
+const authenticate = require("../middleware/authenticate");
 
 // get productdata api
 router.get("/getproducts", async (req, res) => {
@@ -117,6 +118,34 @@ router.post("/login" , async(req,res)=>{
     }
   }catch (error) {
     res.status(400).json({error:"Invalid details"})
+  }
+})
+
+// adding the data into cart----->
+
+router.post("/addcart/:id" , authenticate ,async(req,res)=>{
+  try{
+      const {id} = req.params;
+      const cart = await Products.findOne({id:id});
+      console.log(cart + "cart value");
+
+      const UserContact = await USER.findOne({_id:req.userID});
+      console.log(UserContact);
+
+      if(UserContact){
+        const cartData = await UserContact.addcartdata(cart);
+        await UserContact.save();
+        console.log(cartData);
+
+        res.status(201).json(UserContact);
+
+
+      }else{
+         res.status(401).json({error:"Invalid User"});
+      }
+  }catch(error){
+    res.status(401).json({error:"Invalid User"});
+      
   }
 })
 

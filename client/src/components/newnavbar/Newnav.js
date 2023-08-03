@@ -1,7 +1,11 @@
-import React from 'react'
+import {React} from 'react'
 import "./newnav.css";
 
+
 export function Newnav() {
+
+  
+
   return (
     <div className="new_nav">
       <div className="nav_data">
