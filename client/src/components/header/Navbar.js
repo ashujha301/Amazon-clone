@@ -34,10 +34,20 @@ const Navbar = () => {
             <NavLink to="/login">signin</NavLink>
           </div>
           <div className="cart_btn">
+            {
+              account ? <NavLink to="/buynow">
+              <Badge badgeContent={cartItemCount} color="primary">
+                <ShoppingCartIcon id="icon" />
+  
+              </Badge>
+              </NavLink>: <NavLink to="/login">
             <Badge badgeContent={cartItemCount} color="primary">
               <ShoppingCartIcon id="icon" />
 
             </Badge>
+            </NavLink>
+            }
+            
             <p>Cart</p>
           </div>
           <Avatar className="avatar" />

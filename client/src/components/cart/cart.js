@@ -1,7 +1,7 @@
 import  { React, useContext, useEffect, useState } from "react";
 import { Divider } from "@mui/material";
 import { fontSize } from "@mui/system";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./cart.css";
 import { LoginContext } from "../context/ContextProvider";
 
@@ -9,6 +9,9 @@ const Cart = () => {
 
 
   const { id } = useParams("");
+
+
+  const history = useNavigate("");
 
   const {account,setAccount} = useContext(LoginContext)
 
@@ -60,7 +63,8 @@ const Cart = () => {
       console.log("user valid");
       alert("user invalid");
     }else{
-      alert("item added in your cart");
+      //alert("item added in your cart");
+      history("/buynow");
       setAccount(data1);
     }
   }
