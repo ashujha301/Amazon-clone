@@ -51,7 +51,7 @@ const Navbar = () => {
             <p>Cart</p>
           </div>
           {
-            account ?  <Avatar className="avatar" >{account.name[0].toUpperCase()} </Avatar>: <Avatar className="avatar" > </Avatar>
+            account ?  <Avatar className="avatar2" >{account.name[0].toUpperCase()} </Avatar>: <Avatar className="avatar" > </Avatar>
           }
          
         </div>

@@ -149,4 +149,33 @@ router.post("/addcart/:id" , authenticate ,async(req,res)=>{
   }
 })
 
+//get cart details ----------------------------------------------->
+
+router.get('/cartdetails',authenticate,async(req,res)=>  {
+  try{
+
+    const buyuser = await USER.findOne({_id:req.userID});
+    res.status(201).json(buyuser);
+
+  }catch(error){
+    console.log("error" + error);
+  }
+
+})
+
+//get valid user------------------------------------->
+
+router.get('/validuser',authenticate,async(req,res)=>  {
+  try{
+
+    const validuser1 = await USER.findOne({_id:req.userID});
+    res.status(201).json(validuser1);
+
+  }catch(error){
+    console.log("error" + error);
+  }
+
+})
+
+
 module.exports = router;
