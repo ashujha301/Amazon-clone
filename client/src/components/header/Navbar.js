@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext, useEffect} from 'react'
 import "./navbar.css";
 import SearchIcon from '@mui/icons-material/Search';
 import Badge from '@mui/material/Badge';
@@ -10,10 +10,34 @@ import { LoginContext } from '../context/ContextProvider';
 
 const Navbar = () => {
 
-  const {account} = useContext(LoginContext);
+  const {account,setAccount} = useContext(LoginContext);
   console.log(account);
   
   const cartItemCount = account && account.carts ? account.carts.length : 0;
+
+  const getdetailvaliduser = async()=>{
+    const res = await fetch("/validuser" , {
+      headers:{
+        Accept:"application/json",
+        "Content-Type":"application/json"
+      },
+      credentials:"include"
+    });
+
+    const data = await res.json();
+    //console.log(data);
+
+    if(res.status!== 201){
+      console.log("error");
+    }else{
+      console.log("data valid");
+      setAccount(data);
+  };
+}
+
+  useEffect(()=>{
+    getdetailvaliduser();
+  },[])
 
   return (
     <header>
