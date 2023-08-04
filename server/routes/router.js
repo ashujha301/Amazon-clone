@@ -62,10 +62,9 @@ router.post("/register", async (req, res) => {
       });
 
       //hash -> encrypt hujug ->> decrypt -> hash
-      // bcryptjs 
+      // bcryptjs
 
-      // password hashing process 
-
+      // password hashing process
 
       const storedata = await finalUser.save();
       console.log(storedata);
@@ -77,23 +76,21 @@ router.post("/register", async (req, res) => {
   }
 });
 
-
-
 //Login user api ----------------------------------------------------------------->
 
-router.post("/login" , async(req,res)=>{
-  const {email,password} = req.body;
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
 
-  if(!email || !password){
-    res.status(400).json({error:"fill all the data"})
-  };
+  if (!email || !password) {
+    res.status(400).json({ error: "fill all the data" });
+  }
 
-  try{
-    const userlogin = await USER.findOne({email:email});
+  try {
+    const userlogin = await USER.findOne({ email: email });
     console.log(userlogin + "user value");
 
-    if(userlogin){
-      const isMatch = await bcryptjs.compare(password,userlogin.password);
+    if (userlogin) {
+      const isMatch = await bcryptjs.compare(password, userlogin.password);
       //console.log(isMatch);
 
       //token generate-->
@@ -103,79 +100,88 @@ router.post("/login" , async(req,res)=>{
 
       //generate cookie--->
 
-      res.cookie("Amazonweb", token,{
-        expires:new Date(Date.now() + 900000),
-        httpOnly:true
-      })
+      res.cookie("Amazonweb", token, {
+        expires: new Date(Date.now() + 2 * 60 * 60 * 1000), //setting expiration time 2 hours from now
+        httpOnly: true, //making cookie HTTp-only to enhance security
+      });
 
-      if(!isMatch){
-        res.status(400).json({error:"Invalid details"})
-      }else{
+      if (!isMatch) {
+        res.status(400).json({ error: "Invalid details" });
+      } else {
         res.status(201).json(userlogin);
       }
-    }else{
-      res.status(400).json({error:"Invalid details"})
+    } else {
+      res.status(400).json({ error: "Invalid details" });
     }
-  }catch (error) {
-    res.status(400).json({error:"Invalid details"})
+  } catch (error) {
+    res.status(400).json({ error: "Invalid details" });
   }
-})
+});
 
 // adding the data into cart----->
 
-router.post("/addcart/:id" , authenticate ,async(req,res)=>{
-  try{
-      const {id} = req.params;
-      const cart = await Products.findOne({id:id});
-      console.log(cart + "cart value");
+router.post("/addcart/:id", authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cart = await Products.findOne({ id: id });
+    console.log(cart + "cart value");
 
-      const UserContact = await USER.findOne({_id:req.userID});
-      console.log(UserContact);
+    const UserContact = await USER.findOne({ _id: req.userID });
+    console.log(UserContact);
 
-      if(UserContact){
-        const cartData = await UserContact.addcartdata(cart);
-        await UserContact.save();
-        console.log(cartData);
+    if (UserContact) {
+      const cartData = await UserContact.addcartdata(cart);
+      await UserContact.save();
+      console.log(cartData);
 
-        res.status(201).json(UserContact);
-
-
-      }else{
-         res.status(401).json({error:"Invalid User"});
-      }
-  }catch(error){
-    res.status(401).json({error:"Invalid User"});
-      
+      res.status(201).json(UserContact);
+    } else {
+      res.status(401).json({ error: "Invalid User" });
+    }
+  } catch (error) {
+    res.status(401).json({ error: "Invalid User" });
   }
-})
+});
 
 //get cart details ----------------------------------------------->
 
-router.get('/cartdetails',authenticate,async(req,res)=>  {
-  try{
-
-    const buyuser = await USER.findOne({_id:req.userID});
+router.get("/cartdetails", authenticate, async (req, res) => {
+  try {
+    const buyuser = await USER.findOne({ _id: req.userID });
     res.status(201).json(buyuser);
-
-  }catch(error){
+  } catch (error) {
     console.log("error" + error);
   }
-
-})
+});
 
 //get valid user------------------------------------->
 
-router.get('/validuser',authenticate,async(req,res)=>  {
-  try{
-
-    const validuser1 = await USER.findOne({_id:req.userID});
+router.get("/validuser", authenticate, async (req, res) => {
+  try {
+    const validuser1 = await USER.findOne({ _id: req.userID });
     res.status(201).json(validuser1);
-
-  }catch(error){
+  } catch (error) {
     console.log("error" + error);
   }
+});
 
-})
+//remove item from cart ------------------------------------------------>
 
+router.delete("/remove/:id", authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    req.rootUser.carts = req.rootUser.carts.filter((cruval) => {
+      return cruval.id != id;
+    });
+
+    req.rootUser.save();
+    res.status(201).json(req.rootUser);
+    console.log("item removed");
+  } catch (error) {
+    console.log("error" + error);
+    res.status(400).json(req.rootUser);
+  }
+});
 
 module.exports = router;
