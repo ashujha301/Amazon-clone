@@ -1,5 +1,7 @@
 import React, {useContext, useEffect} from 'react'
 import { LoginContext } from '../context/ContextProvider';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Option = ({deletedata,get}) => {
@@ -24,6 +26,9 @@ const removedata = async(req,res)=>{
       console.log("error");
     }else{
       console.log("user delete");
+      toast.success('Item removed from cart', {
+        position: "top-center",
+        theme: "colored",})
       setAccount(data);
       get();
     }
@@ -43,6 +48,7 @@ const removedata = async(req,res)=>{
         <p style={{cursor:"pointer"}} onClick={()=>removedata(deletedata)}>Delete</p><span>|</span>
         <p className='forremovemedia'>Save For later</p><span>|</span>
         <p className='forremovemedia'>See More Like this</p><span>|</span>
+        <ToastContainer />
     
     </div>
   )
