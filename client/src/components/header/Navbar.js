@@ -10,12 +10,23 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Drawer from "@mui/material/Drawer";
 import RightHeader from "./RightHeader";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 const Navbar = () => {
   const { account, setAccount } = useContext(LoginContext);
   //console.log(account);
 
-  const [dropen,setdropen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const [dropen, setdropen] = useState(false);
 
   const cartItemCount = account && account.carts ? account.carts.length : 0;
 
@@ -39,13 +50,13 @@ const Navbar = () => {
     }
   };
 
-  const handleopen = () =>{
+  const handleopen = () => {
     setdropen(true);
-  }
+  };
 
-  const handledrclose = () =>{
+  const handledrclose = () => {
     setdropen(false);
-  }
+  };
 
   useEffect(() => {
     getdetailvaliduser();
@@ -55,22 +66,23 @@ const Navbar = () => {
     <header>
       <nav>
         <div className="left">
-          <IconButton className='hamburger' onClick={handleopen}>
-          <MenuIcon style={{ color: "#fff" }} />
+          <IconButton className="hamburger" onClick={handleopen}>
+            <MenuIcon style={{ color: "#fff" }} />
           </IconButton>
-            <Drawer open={dropen} onClose={handledrclose}>
-              <RightHeader />
-            </Drawer>
-            
+          <Drawer open={dropen} onClose={handledrclose}>
+            <RightHeader logclose={handledrclose} />
+          </Drawer>
+
           <div className="navlogo">
             <NavLink to="/">
               <img src="./amazon_PNG25.png" alt="" />
             </NavLink>
           </div>
           <div className="nav_searchbar">
-            <input type="text" name="" id="" />
-            <div className="search_icon" />
-            <SearchIcon id="search" />
+            <input type="text" />
+            <div className="search_icon">
+              <SearchIcon id="search" />
+            </div>
           </div>
         </div>
         <div className="right">
@@ -95,12 +107,59 @@ const Navbar = () => {
             <p>Cart</p>
           </div>
           {account ? (
-            <Avatar className="avatar2">
+            <Avatar
+              className="avatar2"
+              id="basic-button"
+              aria-controls={open ? "basic-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={handleClick}
+            >
               {account.name[0].toUpperCase()}{" "}
             </Avatar>
           ) : (
-            <Avatar className="avatar"> </Avatar>
+            <Avatar
+              className="avatar"
+              id="basic-button"
+              aria-controls={open ? "basic-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={handleClick}
+            >
+              {" "}
+            </Avatar>
           )}
+
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            {account ? (
+              <>
+                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleClose}>Logout</MenuItem>
+              </>
+            ) : (
+              <MenuItem onClick={handleClose}>
+                <NavLink
+                  to="/login"
+                  style={{
+                    textDecoration: "none",
+                    color: "#000000DE",
+                    fontSize: "16px",
+                    fontFamily: "Roboto",
+                  }}
+                >
+                  Sign in
+                </NavLink>
+              </MenuItem>
+            )}
+          </Menu>
         </div>
       </nav>
     </header>

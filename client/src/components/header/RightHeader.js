@@ -6,7 +6,7 @@ import { Divider } from "@mui/material";
 import "./rightheader.css";
 
 
-export const RightHeader = () => {
+export const RightHeader = ({logclose}) => {
   const { account, setAccount } = useContext(LoginContext);
   return (
     <>
@@ -19,8 +19,11 @@ export const RightHeader = () => {
           ) : (
             <Avatar className="avatar"> </Avatar>
           )}
+          {
+            account ? <h3>Hello ,{account.name.toUpperCase()}</h3>:""
+          }
           </div>
-          <div className="nav_btn">
+          <div className="nav_btn" onClick={()=>logclose()}>
             <NavLink to="/">Home</NavLink>
             <NavLink to="/">Shop By Category</NavLink>
             <Divider style={{width:"100%",marginLeft:"-20px"}}/>
