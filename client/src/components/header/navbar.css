@@ -136,7 +136,7 @@ header nav .avatar2{
     background-color: #1365cf;
 }
 
-header .hamburgur{
+header .hamburger{
     display: none;
 }
 
@@ -161,7 +161,7 @@ header nav .drawer{
 
 
 @media (max-width:800px){
-    header .hamburgur{
+    header .hamburger{
         display: block;
     }
     header nav{
