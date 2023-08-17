@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Avatar from "@mui/material/Avatar";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { LoginContext } from "../context/ContextProvider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -12,10 +12,17 @@ import Drawer from "@mui/material/Drawer";
 import RightHeader from "./RightHeader";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import LogoutIcon from '@mui/icons-material/Logout';
+import LoginIcon from '@mui/icons-material/Login';
+import PermIdentitySharpIcon from '@mui/icons-material/PermIdentitySharp';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Navbar = () => {
   const { account, setAccount } = useContext(LoginContext);
   //console.log(account);
+
+  const history = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -32,6 +39,7 @@ const Navbar = () => {
 
   const getdetailvaliduser = async () => {
     const res = await fetch("/validuser", {
+      method:"Get",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -56,6 +64,35 @@ const Navbar = () => {
 
   const handledrclose = () => {
     setdropen(false);
+  };
+
+
+
+  const logoutuser = async () => {
+    const res2 = await fetch("/logout", {
+      method:"GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    const data2 = await res2.json();
+    //console.log(data);
+
+    if (res2.status !== 201) {
+      console.log("error");
+    } else {
+      console.log("data valid");
+      setAccount(false);
+      toast.success('User Logged Out Succesfully', {
+        position: "top-center",
+        theme: "colored",})
+      history("/");
+      
+      
+    }
   };
 
   useEffect(() => {
@@ -87,7 +124,7 @@ const Navbar = () => {
         </div>
         <div className="right">
           <div className="nav_btn">
-            <NavLink to="/login">signin</NavLink>
+            <NavLink to="/login">Sign In</NavLink>
           </div>
           <div className="cart_btn">
             {account ? (
@@ -103,6 +140,7 @@ const Navbar = () => {
                 </Badge>
               </NavLink>
             )}
+            <ToastContainer/>
 
             <p>Cart</p>
           </div>
@@ -141,8 +179,8 @@ const Navbar = () => {
           >
             {account ? (
               <>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                <MenuItem onClick={handleClose}><PermIdentitySharpIcon style={{fontSize:"20px",marginRight:"3"}}/>My account</MenuItem>
+                <MenuItem onClick={()=>{handleClose(); logoutuser();}} ><LogoutIcon style={{fontSize:"20px",marginRight:"3"}}/>Logout</MenuItem>
               </>
             ) : (
               <MenuItem onClick={handleClose}>
@@ -154,7 +192,7 @@ const Navbar = () => {
                     fontSize: "16px",
                     fontFamily: "Roboto",
                   }}
-                >
+                ><LoginIcon style={{fontSize:"16px",marginRight:"3"}}/>
                   Sign in
                 </NavLink>
               </MenuItem>
