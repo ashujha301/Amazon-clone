@@ -12,17 +12,26 @@ import Drawer from "@mui/material/Drawer";
 import RightHeader from "./RightHeader";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import PermIdentitySharpIcon from '@mui/icons-material/PermIdentitySharp';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const { account, setAccount } = useContext(LoginContext);
   //console.log(account);
 
   const history = useNavigate();
+
+  const [text,setText] = useState("");
+  //console.log(text);
+  const [liopen,setLiopen] = useState(true);
+
+  const {products} = useSelector(state => state.getproductsdata);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -95,6 +104,11 @@ const Navbar = () => {
     }
   };
 
+  const getText = (items)=>{
+    setText(items);
+    setLiopen(false);
+  }
+
   useEffect(() => {
     getdetailvaliduser();
   }, []);
@@ -116,10 +130,31 @@ const Navbar = () => {
             </NavLink>
           </div>
           <div className="nav_searchbar">
-            <input type="text" />
+            <input type="text"
+            onChange={(e)=>getText(e.target.value)}
+            placeholder="search item"
+            />
             <div className="search_icon">
               <SearchIcon id="search" />
             </div>
+
+            {/*search filter*/}
+
+            {
+              text && 
+              <List className="extrasearch" hidden={liopen}>
+                {
+                  products.filter(product =>product.title.longTitle.toLowerCase().includes(text.toLocaleLowerCase())).map(product=>(
+                    <ListItem>
+                      <NavLink to={`/getproductsone/${product.id}`}>
+                      {product.title.longTitle}
+                      </NavLink>
+                      
+                    </ListItem>
+                  ))
+                }
+              </List>
+            }
           </div>
         </div>
         <div className="right">
